@@ -106,12 +106,16 @@ class LibraryDatabase:
             # Sort the book titles using the custom sorting key function
             sorted_titles = sorted(book_titles, key=sort_key)
 
+            return sorted_titles
+
             # Print the sorted book titles
+            """
             print("Book Titles (Alphabetical Order):")
             for title in sorted_titles:
                 print(title)
         else:
             print("No books found in the database.")
+            """
 
     def sort_database_int(self, column):
         # Validate the column input
@@ -134,7 +138,7 @@ class LibraryDatabase:
             print("No books found in the database.")
 
     def export_database_csv(self):
-    # Execute SQL query to select all rows from the books table
+        # Execute SQL query to select all rows from the books table
         self.cursor.execute("SELECT * FROM books")
         rows = self.cursor.fetchall()
 
