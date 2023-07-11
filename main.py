@@ -1,7 +1,7 @@
 import tkinter as tk
 import sqlite3
 from book_class import Book
-from database_setup import LibraryDatabase
+from library_database import LibraryDatabase
 
 if __name__ == "__main__":
     # Create an instance of the LibraryDatabase class
@@ -12,9 +12,9 @@ if __name__ == "__main__":
     book2 = Book(2, "To Kill a Mockingbird", "Harper Lee", 1960)
     book3 = Book(3, "1984", "George Orwell", 1949)
 
-    library_db.add_book(book1)
-    library_db.add_book(book2)
-    library_db.add_book(book3)
+    #library_db.add_book(book1)
+
+    library_db.print_all_books()
 
     # Close the database connection
     library_db.close_connection()
