@@ -12,9 +12,15 @@ if __name__ == "__main__":
     book2 = Book(2, "To Kill a Mockingbird", "Harper Lee", 1960)
     book3 = Book(3, "1984", "George Orwell", 1949)
 
-    #library_db.add_book(book1)
+    #library_db.add_book(book2)
 
     library_db.print_all_books()
+
+    print()
+
+    library_db.export_database_csv()
+
+    #library_db.remove_book(2)
 
     # Close the database connection
     library_db.close_connection()

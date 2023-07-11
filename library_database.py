@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, csv
 from book_class import Book
 
 class LibraryDatabase:
@@ -25,6 +25,10 @@ class LibraryDatabase:
         ''', (book.book_id, book.title, book.author, book.pub_date))  # Insert a book into the books table
         self.conn.commit()  # Commit the changes to the database
 
+    def remove_book(self, book_id):
+        self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) # Remove book from table with book id
+        self.conn.commit()
+
     @staticmethod
     def print_all_books():
         conn = sqlite3.connect('library.db')  # Connect to the database
@@ -42,6 +46,25 @@ class LibraryDatabase:
             print("No books found in the database.")  # Print a message if no books are found
 
         conn.close()  # Close the database connection
+
+    def export_database_csv(self):
+    # Execute SQL query to select all rows from the books table
+        self.cursor.execute("SELECT * FROM books")
+        rows = self.cursor.fetchall()
+
+        if rows:
+            # Open the CSV file in write mode
+            with open('library_database.csv', 'w', newline='') as file:
+                # Create a CSV writer object
+                writer = csv.writer(file)
+                # Write the column headers to the CSV file
+                writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
+                # Write all the rows to the CSV file
+                writer.writerows(rows)
+            print("Library database exported to library_database.csv")
+        else:
+            print("No books found in the database.")
+
 
     def close_connection(self):
         self.conn.close()  # Close the database connection
