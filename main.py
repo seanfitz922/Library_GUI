@@ -15,11 +15,8 @@ if __name__ == "__main__":
     #library_db.add_book(book2)
 
     library_db.print_all_books()
-
     print()
-
-    library_db.export_database_csv()
-
+    
     #library_db.remove_book(2)
 
     # Close the database connection

@@ -29,6 +29,27 @@ class LibraryDatabase:
         self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) # Remove book from table with book id
         self.conn.commit()
 
+    def query_by_col(self, book_col):
+        # Validate the book_col input
+        valid_columns = ["book_id", "title", "author", "pub_date"]
+        if book_col not in valid_columns:
+            print("Invalid column name. Please enter a valid column: book_id, title, author, or pub_date")
+            return
+
+        # Execute the SQL query to select the specified column from the books table
+        self.cursor.execute(f"SELECT {book_col} FROM books")
+        rows = self.cursor.fetchall()
+
+        if rows:
+            # Extract the values from the result rows
+            column_values = [row[0] for row in rows]
+            # Print the column values
+            print(f"All {book_col} values:")
+            for value in column_values:
+                print(value)
+        else:
+            print("No books found in the database.")
+
     @staticmethod
     def print_all_books():
         conn = sqlite3.connect('library.db')  # Connect to the database
