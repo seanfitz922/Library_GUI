@@ -14,14 +14,32 @@ class LibraryGUI(tk.Tk):
         self.library_db = LibraryDatabase()
         
         # Call methods to set up the GUI components
+        self.create_menu()
         self.create_widgets()
         self.populate_book_list()
 
+    def create_menu(self):
+        # Create the menu bar
+        menubar = tk.Menu(self)
+
+        # Create the File menu
+        file_menu = tk.Menu(menubar, tearoff=0)
+        file_menu.add_command(label="Open", command=self.open_file)
+        file_menu.add_command(label="Save", command=self.save_file)
+        menubar.add_cascade(label="File", menu=file_menu)
+
+        # Create the Actions menu
+        actions_menu = tk.Menu(menubar, tearoff=0)
+        actions_menu.add_command(label="Add", command=self.add_book)
+        actions_menu.add_command(label="Remove", command=self.remove_book)
+        menubar.add_cascade(label="Actions", menu=actions_menu)
+
+        # Configure the window to use the menu bar
+        self.config(menu=menubar)
+
     def create_widgets(self):
         # Create and configure GUI components (labels, buttons, etc.)
-        # ... Place them using grid(), pack(), or place() methods
-        
-        self.book_listbox = tk.Listbox(self, font=("Arial", 15), height=25, width = 50)
+        self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=30, width = 50)
         self.book_listbox.grid(row=0, column=0)
 
     
@@ -32,8 +50,17 @@ class LibraryGUI(tk.Tk):
         for title in book_titles:
             self.book_listbox.insert(tk.END, title)
 
-    # Add other methods for event handling, button clicks, etc.
-    # ...
+    def open_file(self):
+        pass
+
+    def save_file(self):
+        pass
+
+    def add_book(self):
+        pass
+
+    def remove_book(self):
+        pass
 
 # Create an instance of the LibraryGUI class and run the GUI
 library_gui = LibraryGUI()
