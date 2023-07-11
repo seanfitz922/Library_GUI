@@ -3,11 +3,15 @@ from book_class import Book
 
 class LibraryDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect('library.db')  # Connect to the database
-        self.cursor = self.conn.cursor()  # Create a cursor object
-        self.create_books_table()  # Create the books table if it doesn't exist
+        # Connect to the database
+        self.conn = sqlite3.connect('library.db') 
+        # Create a cursor object 
+        self.cursor = self.conn.cursor() 
+        # Create the books table if it doesn't exist 
+        self.create_books_table()  
 
     def create_books_table(self):
+        # Create the books table with the specified columns
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS books (
                 book_id INTEGER PRIMARY KEY,
@@ -15,36 +19,40 @@ class LibraryDatabase:
                 author TEXT,
                 pub_date INTEGER
             )
-        ''')  # Create the books table with the specified columns
-        self.conn.commit()  # Commit the changes to the database
+        ''')  
+        # Commit the changes to the database
+        self.conn.commit()  
 
     def add_book(self, book):
+        # Insert a book into the books table
         self.cursor.execute('''
             INSERT INTO books (book_id, title, author, pub_date)
             VALUES (?, ?, ?, ?)
-        ''', (book.book_id, book.title, book.author, book.pub_date))  # Insert a book into the books table
-        self.conn.commit()  # Commit the changes to the database
+        ''', (book.book_id, book.title, book.author, book.pub_date))  
+        # Commit the changes to the database
+        self.conn.commit()  
 
     def remove_book(self, book_id):
-        self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) # Remove book from table with book id
+        # Remove book from table with book id
+        self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) 
         self.conn.commit()
 
-    def query_by_col(self, book_col):
-        # Validate the book_col input
+    def query_by_col(self, column):
+        # Validate the column input
         valid_columns = ["book_id", "title", "author", "pub_date"]
-        if book_col not in valid_columns:
+        if column not in valid_columns:
             print("Invalid column name. Please enter a valid column: book_id, title, author, or pub_date")
             return
 
         # Execute the SQL query to select the specified column from the books table
-        self.cursor.execute(f"SELECT {book_col} FROM books")
+        self.cursor.execute(f"SELECT {column} FROM books")
         rows = self.cursor.fetchall()
 
         if rows:
             # Extract the values from the result rows
             column_values = [row[0] for row in rows]
             # Print the column values
-            print(f"All {book_col} values:")
+            print(f"All {column} values:")
             for value in column_values:
                 print(value)
         else:
@@ -52,11 +60,15 @@ class LibraryDatabase:
 
     @staticmethod
     def print_all_books():
-        conn = sqlite3.connect('library.db')  # Connect to the database
-        cursor = conn.cursor()  # Create a cursor object
+        # Connect to the database
+        conn = sqlite3.connect('library.db')  
+        # Create a cursor object
+        cursor = conn.cursor()  
 
-        cursor.execute("SELECT * FROM books")  # Execute the SQL query to retrieve all books
-        rows = cursor.fetchall()  # Fetch all rows returned by the query
+        # Execute the SQL query to retrieve all books
+        cursor.execute("SELECT * FROM books")  
+        # Fetch all rows returned by the query
+        rows = cursor.fetchall()  
 
         if rows:
             for row in rows:
@@ -64,9 +76,62 @@ class LibraryDatabase:
                 print(f"Book ID: {book_id}, Title: {title}, Author: {author}, Publication Date: {pub_date}")
                 # Print the book details
         else:
-            print("No books found in the database.")  # Print a message if no books are found
+            # Print a message if no books are found
+            print("No books found in the database.")  
 
-        conn.close()  # Close the database connection
+        # Close the database connection
+        conn.close()  
+
+    def sort_database_title(self):
+        # Execute the SQL query to select the book titles from the books table
+        self.cursor.execute("SELECT title FROM books")
+        rows = self.cursor.fetchall()
+
+        if rows:
+            # Extract the book titles from the result rows
+            book_titles = [row[0] for row in rows]
+
+            # Define a custom sorting key function
+            def sort_key(title):
+                # Split the title into words
+                words = title.split()
+                # Ignore certain words at the beginning
+                if len(words) > 1 and words[0].lower() in ["the", "a", "an"]:
+                    # Sort based on the second word
+                    return words[1]  
+                else:
+                    # Sort as is
+                    return title  
+
+            # Sort the book titles using the custom sorting key function
+            sorted_titles = sorted(book_titles, key=sort_key)
+
+            # Print the sorted book titles
+            print("Book Titles (Alphabetical Order):")
+            for title in sorted_titles:
+                print(title)
+        else:
+            print("No books found in the database.")
+
+    def sort_database_int(self, column):
+        # Validate the column input
+        valid_columns = ["book_id", "pub_date"]
+        if column not in valid_columns:
+            print("Invalid column name. Please enter a valid column: book_id or pub_date")
+            return
+
+        # Execute the SQL query to select all columns from the books table and order by the specified column in ascending order
+        self.cursor.execute(f"SELECT * FROM books ORDER BY {column} ASC")
+        rows = self.cursor.fetchall()
+
+        if rows:
+            # Print the sorted results
+            print(f"Sorted Database (Ascending Order - {column}):")
+            for row in rows:
+                row_str = ", ".join(str(value) for value in row)
+                print(row_str)
+        else:
+            print("No books found in the database.")
 
     def export_database_csv(self):
     # Execute SQL query to select all rows from the books table
