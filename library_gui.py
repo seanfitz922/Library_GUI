@@ -31,7 +31,7 @@ class LibraryGUI(tk.Tk):
         # Create the Actions menu
         actions_menu = tk.Menu(menubar, tearoff=0)
         actions_menu.add_command(label="Add", command=self.prompt_add_book)
-        actions_menu.add_command(label="Remove", command=self.remove_book)
+        actions_menu.add_command(label="Remove", command=self.prompt_remove_book)
         menubar.add_cascade(label="Actions", menu=actions_menu)
 
         # Create the Sort menu
@@ -122,8 +122,21 @@ class LibraryGUI(tk.Tk):
             title_entry.get(), author_entry.get(), pub_date_entry.get(), popup_window, self.book_listbox))
         add_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
-    def remove_book(self):
-        pass
+    def prompt_remove_book(self):
+        popup_window = tk.Toplevel(self)
+        popup_window.title("Remove Book")
+
+        # Create labels and entry fields for book ID
+        id_label = tk.Label(popup_window, text="Book ID:")
+        id_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        id_entry = tk.Entry(popup_window)
+        id_entry.grid(row=0, column=1, padx=10, pady=5)
+
+
+        # Create a button to confirm removing the book
+        remove_button = tk.Button(popup_window, text="Remove", command=lambda: self.library_db.remove_book(
+            id_entry.get(), popup_window, self.book_listbox))
+        remove_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
     def sort_by_title_ascending(self):
         pass

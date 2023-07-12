@@ -54,10 +54,27 @@ class LibraryDatabase:
         max_id = self.cursor.fetchone()[0]
         return max_id if max_id is not None else 0
 
-    def remove_book(self, book_id):
+    def remove_book(self, book_id, popup_window, book_listbox):
         # Remove book from table with book id
+        if not book_id:
+            messagebox.showwarning("Invalid Input", "Please provide the book's ID.")
+            return
+        
+        # Check if the book ID exists in the database
+        if self.cursor.fetchone() is None:
+            messagebox.showwarning("Invalid Book ID", "The provided book ID does not exist.")
+            return
+
         self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) 
         self.conn.commit()
+
+        # Remove book from the book_listbox
+        selected_indices = book_listbox.curselection()
+        if selected_indices:
+            book_listbox.delete(selected_indices[0])
+
+        messagebox.showinfo("Success", "Book removed successfully.")
+        popup_window.destroy()
 
     
 
