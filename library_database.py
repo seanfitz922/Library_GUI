@@ -1,5 +1,8 @@
 import sqlite3, csv
 from book_class import Book
+import tkinter as tk
+from tkinter import messagebox
+
 
 class LibraryDatabase:
     def __init__(self):
@@ -23,19 +26,40 @@ class LibraryDatabase:
         # Commit the changes to the database
         self.conn.commit()  
 
-    def add_book(self, book):
-        # Insert a book into the books table
+    def add_book(self, title, author, pub_date, popup_window, book_listbox):
+        # Validate the input
+        if not title or not author or not pub_date:
+            messagebox.showwarning("Invalid Input", "Please provide all book details.")
+            return
+
+        # Get the current maximum book_id from the database
+        max_book_id = self.get_max_book_id()
+
+        # Calculate the new book_id by incrementing the maximum book_id by 1
+        book_id = max_book_id + 1
+
+        # Insert the book into the library database
         self.cursor.execute('''
             INSERT INTO books (book_id, title, author, pub_date)
             VALUES (?, ?, ?, ?)
-        ''', (book.book_id, book.title, book.author, book.pub_date))  
-        # Commit the changes to the database
-        self.conn.commit()  
+        ''', (book_id, title, author, pub_date))
+        self.conn.commit()
+
+        book_listbox.insert(tk.END, f"{book_id}: {title} by {author} ({pub_date})")
+        messagebox.showinfo("Success", "Book added successfully.")
+        popup_window.destroy()
+
+    def get_max_book_id(self):
+        self.cursor.execute("SELECT MAX(book_id) FROM books")
+        max_id = self.cursor.fetchone()[0]
+        return max_id if max_id is not None else 0
 
     def remove_book(self, book_id):
         # Remove book from table with book id
         self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) 
         self.conn.commit()
+
+    
 
     def query_by_col(self, column):
         # Validate the column input
@@ -154,7 +178,6 @@ class LibraryDatabase:
             print("Library database exported to library_database.csv")
         else:
             print("No books found in the database.")
-
 
     def close_connection(self):
         self.conn.close()  # Close the database connection

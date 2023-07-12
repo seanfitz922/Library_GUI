@@ -30,7 +30,7 @@ class LibraryGUI(tk.Tk):
 
         # Create the Actions menu
         actions_menu = tk.Menu(menubar, tearoff=0)
-        actions_menu.add_command(label="Add", command=self.add_book)
+        actions_menu.add_command(label="Add", command=self.prompt_add_book)
         actions_menu.add_command(label="Remove", command=self.remove_book)
         menubar.add_cascade(label="Actions", menu=actions_menu)
 
@@ -63,15 +63,26 @@ class LibraryGUI(tk.Tk):
 
         menubar.add_cascade(label="Sort", menu=sort_menu)
 
+        # Create the frame for the search bar
+        search_frame = tk.Frame(self)
+        search_frame.grid(row=0, column=0, sticky="e", padx=10, pady=10)  # Adjust padding and sticky position as needed
+
+        # Create the Search bar
+        self.search_var = tk.StringVar()
+        search_entry = tk.Entry(search_frame, textvariable=self.search_var)
+        search_entry.grid(row=0, column=0, padx=5, sticky="e")
+        search_entry.bind("<Return>", self.search_books)
+        search_button = tk.Button(search_frame, text="Search", command=self.search_books)
+        search_button.grid(row=0, column=1, padx=5, sticky="e")
+
         # Configure the window to use the menu bar
         self.config(menu=menubar)
 
     def create_widgets(self):
         # Create and configure GUI components (labels, buttons, etc.)
-        self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=30, width = 100)
-        self.book_listbox.grid(row=0, column=0)
+        self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
+        self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
 
-    
     def populate_book_list(self):
         # Retrieve book titles from the library database and populate the listbox
         book_titles = self.library_db.sort_database_title()
@@ -85,8 +96,31 @@ class LibraryGUI(tk.Tk):
     def save_file(self):
         pass
 
-    def add_book(self):
-        pass
+    def prompt_add_book(self):
+        # Create a new popup window
+        popup_window = tk.Toplevel(self)
+        popup_window.title("Add Book")
+
+        # Create labels and entry fields for book details
+        title_label = tk.Label(popup_window, text="Title:")
+        title_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        title_entry = tk.Entry(popup_window)
+        title_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        author_label = tk.Label(popup_window, text="Author:")
+        author_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
+        author_entry = tk.Entry(popup_window)
+        author_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        pub_date_label = tk.Label(popup_window, text="Publication Date:")
+        pub_date_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
+        pub_date_entry = tk.Entry(popup_window)
+        pub_date_entry.grid(row=2, column=1, padx=10, pady=5)
+
+        # Create a button to confirm adding the book
+        add_button = tk.Button(popup_window, text="Add", command=lambda: self.library_db.add_book(
+            title_entry.get(), author_entry.get(), pub_date_entry.get(), popup_window, self.book_listbox))
+        add_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
     def remove_book(self):
         pass
@@ -117,6 +151,13 @@ class LibraryGUI(tk.Tk):
     
     def sort_pub_date(self):
         pass
+
+    def search_books(self, event=None):
+        # Retrieve the search query from the search bar
+        search_query = self.search_var.get()
+
+        # Perform the search operation based on the query
+        # ...
 
 # Create an instance of the LibraryGUI class and run the GUI
 library_gui = LibraryGUI()
