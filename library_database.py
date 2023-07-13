@@ -5,7 +5,9 @@ from tkinter import messagebox, filedialog
 
 
 class LibraryDatabase:
-    def __init__(self):
+    def __init__(self, parent):
+        
+        self.parent = parent
         # Connect to the database
         self.conn = sqlite3.connect('library.db') 
         # Create a cursor object 
@@ -128,6 +130,10 @@ class LibraryDatabase:
 
         if rows:
             self.populate_books(rows, book_listbox)
+
+    def close_file(self):
+        # Close the current window
+        self.parent.destroy()
 
     def export_database_csv(self):
         # Open file browser dialog to select the save location

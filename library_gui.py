@@ -8,10 +8,11 @@ class LibraryGUI(tk.Tk):
 
         # Set up the window properties
         self.title("Library Database")
-        self.geometry("800x600")  # Set the window size to 800x600
+        # Set the window size to 800x600
+        self.geometry("800x600")  
 
         # Initialize the library database
-        self.library_db = LibraryDatabase()
+        self.library_db = LibraryDatabase(self)
 
         # Call methods to set up the GUI components
         self.create_menu()
@@ -26,6 +27,7 @@ class LibraryGUI(tk.Tk):
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label="Open", command=self.open_file)
         file_menu.add_command(label="Save", command=self.save_file)
+        file_menu.add_command(label="Close", command=self.library_db.close_file)
         menubar.add_cascade(label="File", menu=file_menu)
 
         # Create the Actions menu
@@ -93,6 +95,9 @@ class LibraryGUI(tk.Tk):
         pass
 
     def save_file(self):
+        pass
+
+    def close_file(self):
         pass
 
     def prompt_add_book(self):
