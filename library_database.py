@@ -76,8 +76,6 @@ class LibraryDatabase:
         messagebox.showinfo("Success", "Book removed successfully.")
         popup_window.destroy()
 
-    
-
     def query_by_col(self, column):
         # Validate the column input
         valid_columns = ["book_id", "title", "author", "pub_date"]
@@ -123,7 +121,7 @@ class LibraryDatabase:
         # Close the database connection
         conn.close()  
 
-    def sort_database_title(self):
+    def sort_database_title(self, book_listbox):
         # Execute the SQL query to select the book titles from the books table
         self.cursor.execute("SELECT title FROM books")
         rows = self.cursor.fetchall()
@@ -147,36 +145,27 @@ class LibraryDatabase:
             # Sort the book titles using the custom sorting key function
             sorted_titles = sorted(book_titles, key=sort_key)
 
-            return sorted_titles
+            # Clear the book_listbox before inserting the sorted results
+            book_listbox.delete(0, tk.END)
 
-            # Print the sorted book titles
-            """
-            print("Book Titles (Alphabetical Order):")
+            # Display the sorted results
             for title in sorted_titles:
-                print(title)
-        else:
-            print("No books found in the database.")
-            """
+                book_listbox.insert(tk.END, title)
 
-    def sort_database_int(self, column):
-        # Validate the column input
-        valid_columns = ["book_id", "pub_date"]
-        if column not in valid_columns:
-            print("Invalid column name. Please enter a valid column: book_id or pub_date")
-            return
+        
 
-        # Execute the SQL query to select all columns from the books table and order by the specified column in ascending order
+    def sort_database_int(self, column, book_listbox):
+        # Execute the SQL query to select all columns from the books table and order by the publication date in ascending order
         self.cursor.execute(f"SELECT * FROM books ORDER BY {column} ASC")
         rows = self.cursor.fetchall()
 
         if rows:
-            # Print the sorted results
-            print(f"Sorted Database (Ascending Order - {column}):")
+            # Clear the book_listbox before inserting the sorted results
+            book_listbox.delete(0, tk.END)
+
+            # Display the sorted results
             for row in rows:
-                row_str = ", ".join(str(value) for value in row)
-                print(row_str)
-        else:
-            print("No books found in the database.")
+                book_listbox.insert(tk.END, row)
 
     def export_database_csv(self):
         # Execute SQL query to select all rows from the books table

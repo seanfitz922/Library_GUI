@@ -12,11 +12,11 @@ class LibraryGUI(tk.Tk):
 
         # Initialize the library database
         self.library_db = LibraryDatabase()
-        
+
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
-        self.populate_book_list()
+        self.library_db.sort_database_title(self.book_listbox)
 
     def create_menu(self):
         # Create the menu bar
@@ -39,7 +39,7 @@ class LibraryGUI(tk.Tk):
 
         # submenu for title sorting
         sort_title_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_title_submenu.add_command(label="A-Z", command=self.sort_by_title_ascending)
+        sort_title_submenu.add_command(label="A-Z", command=lambda: self.library_db.sort_database_title(self.book_listbox))
         sort_title_submenu.add_command(label="Z-A", command=self.sort_by_title_descending)
         sort_menu.add_cascade(label="Title", menu=sort_title_submenu)
 
@@ -51,13 +51,13 @@ class LibraryGUI(tk.Tk):
 
         # submenu for publication date sorting
         sort_pubdate_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_pubdate_submenu.add_command(label="Ascending", command=self.sort_by_pub_date_ascending)
+        sort_pubdate_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("pub_date", self.book_listbox))
         sort_pubdate_submenu.add_command(label="Descending", command=self.sort_by_pub_date_descending)
         sort_menu.add_cascade(label="Publication Date", menu=sort_pubdate_submenu)
 
         # submenu for book id sorting
         sort_id_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_id_submenu.add_command(label="Ascending", command=self.sort_by_id_ascending)
+        sort_id_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("book_id", self.book_listbox))
         sort_id_submenu.add_command(label="Descending", command=self.sort_by_id_descending)
         sort_menu.add_cascade(label="ID", menu=sort_id_submenu)
 
@@ -65,7 +65,13 @@ class LibraryGUI(tk.Tk):
 
         # Create the frame for the search bar
         search_frame = tk.Frame(self)
-        search_frame.grid(row=0, column=0, sticky="e", padx=10, pady=10)  # Adjust padding and sticky position as needed
+        search_frame.grid(row=0, column=0, sticky="e", padx=10, pady=10)
+
+        # submenu for exporting (csv)
+        export_menu = tk.Menu(menubar, tearoff=0)
+        export_menu.add_command(label="CSV", command=self.export_database_csv)
+
+        menubar.add_cascade(label="Export", menu=export_menu)
 
         # Create the Search bar
         self.search_var = tk.StringVar()
@@ -82,13 +88,6 @@ class LibraryGUI(tk.Tk):
         # Create and configure GUI components (labels, buttons, etc.)
         self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
         self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
-
-    def populate_book_list(self):
-        # Retrieve book titles from the library database and populate the listbox
-        book_titles = self.library_db.sort_database_title()
-
-        for title in book_titles:
-            self.book_listbox.insert(tk.END, title)
 
     def open_file(self):
         pass
@@ -156,13 +155,10 @@ class LibraryGUI(tk.Tk):
     def sort_by_id_descending(self):
         pass
 
-    def sort_by_pub_date_ascending(self):
-        pass
-
     def sort_by_pub_date_descending(self):
         pass
-    
-    def sort_pub_date(self):
+
+    def export_database_csv(self):
         pass
 
     def search_books(self, event=None):
