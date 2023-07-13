@@ -1,7 +1,7 @@
 import sqlite3, csv
 from book_class import Book
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
 
 class LibraryDatabase:
@@ -25,6 +25,14 @@ class LibraryDatabase:
         ''')  
         # Commit the changes to the database
         self.conn.commit()  
+
+    def populate_books(self, column, book_listbox):
+        # Clear the book_listbox before inserting results
+        book_listbox.delete(0, tk.END)
+
+        # Display books
+        for columns in column:
+                book_listbox.insert(tk.END, columns)
 
     def add_book(self, title, author, pub_date, popup_window, book_listbox):
         # Validate the input
@@ -76,52 +84,7 @@ class LibraryDatabase:
         messagebox.showinfo("Success", "Book removed successfully.")
         popup_window.destroy()
 
-    def query_by_col(self, column):
-        # Validate the column input
-        valid_columns = ["book_id", "title", "author", "pub_date"]
-        if column not in valid_columns:
-            print("Invalid column name. Please enter a valid column: book_id, title, author, or pub_date")
-            return
-
-        # Execute the SQL query to select the specified column from the books table
-        self.cursor.execute(f"SELECT {column} FROM books")
-        rows = self.cursor.fetchall()
-
-        if rows:
-            # Extract the values from the result rows
-            column_values = [row[0] for row in rows]
-            # Print the column values
-            print(f"All {column} values:")
-            for value in column_values:
-                print(value)
-        else:
-            print("No books found in the database.")
-
-    @staticmethod
-    def print_all_books():
-        # Connect to the database
-        conn = sqlite3.connect('library.db')  
-        # Create a cursor object
-        cursor = conn.cursor()  
-
-        # Execute the SQL query to retrieve all books
-        cursor.execute("SELECT * FROM books")  
-        # Fetch all rows returned by the query
-        rows = cursor.fetchall()  
-
-        if rows:
-            for row in rows:
-                book_id, title, author, pub_date = row
-                print(f"Book ID: {book_id}, Title: {title}, Author: {author}, Publication Date: {pub_date}")
-                # Print the book details
-        else:
-            # Print a message if no books are found
-            print("No books found in the database.")  
-
-        # Close the database connection
-        conn.close()  
-
-    def sort_database_title(self, book_listbox):
+    def sort_database_title(self, book_listbox, order):
         # Execute the SQL query to select the book titles from the books table
         self.cursor.execute("SELECT title FROM books")
         rows = self.cursor.fetchall()
@@ -142,48 +105,55 @@ class LibraryDatabase:
                     # Sort as is
                     return title  
 
-            # Sort the book titles using the custom sorting key function
-            sorted_titles = sorted(book_titles, key=sort_key)
+            if order == "ASC":
+                # Sort the book titles using the custom sorting key function
+                sorted_titles = sorted(book_titles, key=sort_key)
+            else:
+                # Sort the book using custom sorting key and in descending order
+                sorted_titles = sorted(book_titles, key=sort_key, reverse=True)
 
-            # Clear the book_listbox before inserting the sorted results
-            book_listbox.delete(0, tk.END)
+            self.populate_books(sorted_titles, book_listbox)
 
-            # Display the sorted results
-            for title in sorted_titles:
-                book_listbox.insert(tk.END, title)
-
-        
-
-    def sort_database_int(self, column, book_listbox):
-        # Execute the SQL query to select all columns from the books table and order by the publication date in ascending order
-        self.cursor.execute(f"SELECT * FROM books ORDER BY {column} ASC")
+    def sort_database_author(self, book_listbox, order):
+        self.cursor.execute(f"SELECT * FROM books ORDER BY author {order}")
         rows = self.cursor.fetchall()
 
         if rows:
-            # Clear the book_listbox before inserting the sorted results
-            book_listbox.delete(0, tk.END)
+            self.populate_books(rows, book_listbox)
 
-            # Display the sorted results
-            for row in rows:
-                book_listbox.insert(tk.END, row)
+    def sort_database_int(self, column, book_listbox, order):
+        # Execute the SQL query to select all columns from the books table and order by the publication date in ascending order
+        self.cursor.execute(f"SELECT * FROM books ORDER BY {column} {order}")
+        rows = self.cursor.fetchall()
+
+        if rows:
+            self.populate_books(rows, book_listbox)
 
     def export_database_csv(self):
-        # Execute SQL query to select all rows from the books table
-        self.cursor.execute("SELECT * FROM books")
-        rows = self.cursor.fetchall()
+        # Open file browser dialog to select the save location
+        filepath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
 
-        if rows:
-            # Open the CSV file in write mode
-            with open('library_database.csv', 'w', newline='') as file:
-                # Create a CSV writer object
-                writer = csv.writer(file)
-                # Write the column headers to the CSV file
-                writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
-                # Write all the rows to the CSV file
-                writer.writerows(rows)
-            print("Library database exported to library_database.csv")
+        # Check if a file was selected
+        if filepath:
+            # Execute SQL query to select all rows from the books table
+            self.cursor.execute("SELECT * FROM books")
+            rows = self.cursor.fetchall()
+
+            if rows:
+                # Open the CSV file at the selected location in write mode
+                with open(filepath, 'w', newline='') as file:
+                    # Create a CSV writer object
+                    writer = csv.writer(file)
+                    # Write the column headers to the CSV file
+                    writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
+                    # Write all the rows to the CSV file
+                    writer.writerows(rows)
+                    
+                messagebox.showinfo("Export Success", "Library database exported to " + filepath)
+            else:
+                messagebox.showwarning("Export Failed", "No books found in the database.")
         else:
-            print("No books found in the database.")
+            messagebox.showwarning("Export Cancelled", "No file selected.")
 
     def close_connection(self):
         self.conn.close()  # Close the database connection

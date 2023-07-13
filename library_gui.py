@@ -16,7 +16,7 @@ class LibraryGUI(tk.Tk):
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
-        self.library_db.sort_database_title(self.book_listbox)
+        self.library_db.sort_database_title(self.book_listbox, "ASC")
 
     def create_menu(self):
         # Create the menu bar
@@ -39,26 +39,26 @@ class LibraryGUI(tk.Tk):
 
         # submenu for title sorting
         sort_title_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_title_submenu.add_command(label="A-Z", command=lambda: self.library_db.sort_database_title(self.book_listbox))
-        sort_title_submenu.add_command(label="Z-A", command=self.sort_by_title_descending)
+        sort_title_submenu.add_command(label="A-Z", command=lambda: self.library_db.sort_database_title(self.book_listbox, "ASC"))
+        sort_title_submenu.add_command(label="Z-A", command=lambda: self.library_db.sort_database_title(self.book_listbox, "DESC"))
         sort_menu.add_cascade(label="Title", menu=sort_title_submenu)
 
         # submenu for author sorting
         sort_author_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_author_submenu.add_command(label="A-Z", command=self.sort_by_author_ascending)
-        sort_author_submenu.add_command(label="Z-A", command=self.sort_by_author_descending)
+        sort_author_submenu.add_command(label="A-Z", command=lambda: self.library_db.sort_database_author(self.book_listbox, "ASC"))
+        sort_author_submenu.add_command(label="Z-A", command=lambda: self.library_db.sort_database_author(self.book_listbox, "DESC"))
         sort_menu.add_cascade(label="Author", menu=sort_author_submenu)
 
         # submenu for publication date sorting
         sort_pubdate_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_pubdate_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("pub_date", self.book_listbox))
-        sort_pubdate_submenu.add_command(label="Descending", command=self.sort_by_pub_date_descending)
+        sort_pubdate_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("pub_date", self.book_listbox, "ASC"))
+        sort_pubdate_submenu.add_command(label="Descending", command=lambda: self.library_db.sort_database_int("pub_date", self.book_listbox, "DESC"))
         sort_menu.add_cascade(label="Publication Date", menu=sort_pubdate_submenu)
 
         # submenu for book id sorting
         sort_id_submenu = tk.Menu(sort_menu, tearoff=0)
-        sort_id_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("book_id", self.book_listbox))
-        sort_id_submenu.add_command(label="Descending", command=self.sort_by_id_descending)
+        sort_id_submenu.add_command(label="Ascending", command=lambda: self.library_db.sort_database_int("book_id", self.book_listbox, "ASC"))
+        sort_id_submenu.add_command(label="Descending", command=lambda: self.library_db.sort_database_int("book_id", self.book_listbox, "DESC"))
         sort_menu.add_cascade(label="ID", menu=sort_id_submenu)
 
         menubar.add_cascade(label="Sort", menu=sort_menu)
@@ -69,7 +69,7 @@ class LibraryGUI(tk.Tk):
 
         # submenu for exporting (csv)
         export_menu = tk.Menu(menubar, tearoff=0)
-        export_menu.add_command(label="CSV", command=self.export_database_csv)
+        export_menu.add_command(label="CSV", command=self.library_db.export_database_csv)
 
         menubar.add_cascade(label="Export", menu=export_menu)
 
@@ -136,30 +136,6 @@ class LibraryGUI(tk.Tk):
         remove_button = tk.Button(popup_window, text="Remove", command=lambda: self.library_db.remove_book(
             id_entry.get(), popup_window, self.book_listbox))
         remove_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
-
-    def sort_by_title_ascending(self):
-        pass
-
-    def sort_by_title_descending(self):
-        pass
-
-    def sort_by_author_ascending(self):
-        pass
-
-    def sort_by_author_descending(self):
-        pass
-
-    def sort_by_id_ascending(self):
-        pass
-
-    def sort_by_id_descending(self):
-        pass
-
-    def sort_by_pub_date_descending(self):
-        pass
-
-    def export_database_csv(self):
-        pass
 
     def search_books(self, event=None):
         # Retrieve the search query from the search bar
