@@ -97,9 +97,6 @@ class LibraryGUI(tk.Tk):
     def save_file(self):
         pass
 
-    def close_file(self):
-        pass
-
     def prompt_add_book(self):
         # Create a new popup window
         popup_window = tk.Toplevel(self)
