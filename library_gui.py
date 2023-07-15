@@ -1,5 +1,6 @@
 import tkinter as tk 
-from tkinter import messagebox
+import os
+from tkinter import messagebox, filedialog
 from library_database import LibraryDatabase
 
 class LibraryGUI(tk.Tk):
@@ -9,10 +10,9 @@ class LibraryGUI(tk.Tk):
         self.title("Library Database")
         # Set the window size to 800x600
         self.geometry("800x600")  
-
         # Initialize the library database
         self.library_db = LibraryDatabase(self)
-
+        # Define a variable to store the current file name
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
@@ -24,7 +24,7 @@ class LibraryGUI(tk.Tk):
 
         # Create the File menu
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Open", command=self.open_file)
+        file_menu.add_command(label="Open", command=self.library_db.open_file)
         file_menu.add_command(label="Save", command=self.save_file)
         file_menu.add_command(label="Close", command=self.library_db.close_file)
         menubar.add_cascade(label="File", menu=file_menu)
@@ -86,12 +86,14 @@ class LibraryGUI(tk.Tk):
         self.config(menu=menubar)
 
     def create_widgets(self):
-        # Create and configure GUI components (labels, buttons, etc.)
+        # Label for the current file name
+        self.file_label = tk.Label(self, text="Current File: ")
+        self.file_label.grid(row=0, column=0, sticky="w")
+
+        # Create and configure GUI components (listbox, buttons, etc.)
         self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
         self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
 
-    def open_file(self):
-        pass
 
     def save_file(self):
         pass

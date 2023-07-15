@@ -8,6 +8,7 @@ class LibraryDatabase:
     def __init__(self, parent):
         
         self.parent = parent
+        self.current_file = None
         # Connect to the database
         self.conn = sqlite3.connect('library.db') 
         # Create a cursor object 
@@ -155,6 +156,12 @@ class LibraryDatabase:
         # Close the current window
         self.parent.destroy()
 
+    def open_file(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+        if file_path:
+            self.current_file = file_path
+            self.update_title()
+
     def export_database_csv(self):
         # Open file browser dialog to select the save location
         filepath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
@@ -180,6 +187,14 @@ class LibraryDatabase:
                 messagebox.showwarning("Export Failed", "No books found in the database.")
         else:
             messagebox.showwarning("Export Cancelled", "No file selected.")
+
+    def update_title(self):
+        if self.current_file:
+            self.file_label.config(text="Current File: " + self.current_file)
+            self.title("Library Database - " + self.current_file)
+        else:
+            self.file_label.config(text="Current File: ")
+            self.title("Library Database")
 
     def close_connection(self):
         self.conn.close()  # Close the database connection
