@@ -92,8 +92,6 @@ class LibraryDatabase:
         self.cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,)) 
         self.conn.commit()
 
-        
-
         # Remove book from the book_listbox
         selected_indices = book_listbox.curselection()
         if selected_indices:
@@ -110,13 +108,10 @@ class LibraryDatabase:
         rows = self.cursor.fetchall()
 
         if rows:
-            # Extract the book titles from the result rows
-            book_info = [f"ID: {row[0]}, Title: {row[1]}, Author: {row[2]}, Publication Date: {row[3]}" for row in rows]
-
             # Define a custom sorting key function
-            def sort_key(info):
-                # Extract the title from the book information
-                title = info.split(",")[1].strip().split(":")[1].strip()
+            def sort_key(row):
+                # Extract the title from the row
+                title = row[1]
                 # Split the title into words
                 words = title.split()
                 # Ignore certain words at the beginning
@@ -128,14 +123,13 @@ class LibraryDatabase:
                     return title
 
             if order == "ASC":
-                # Sort the book information using the custom sorting key function
-                sorted_info = sorted(book_info, key=sort_key)
+                # Sort the rows based on the custom sorting key function
+                sorted_rows = sorted(rows, key=sort_key)
             else:
-                # Sort the book information using custom sorting key and in descending order
-                sorted_info = sorted(book_info, key=sort_key, reverse=True)
+                # Sort the rows based on the custom sorting key function in descending order
+                sorted_rows = sorted(rows, key=sort_key, reverse=True)
 
-            self.populate_books(sorted_info, book_listbox)
-
+            self.populate_books(sorted_rows, book_listbox)
 
     def sort_database_author(self, book_listbox, order):
         self.cursor.execute(f"SELECT * FROM books ORDER BY author {order}")
