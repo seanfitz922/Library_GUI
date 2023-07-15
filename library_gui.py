@@ -5,7 +5,6 @@ from library_database import LibraryDatabase
 class LibraryGUI(tk.Tk):
     def __init__(self):
         super().__init__()
-
         # Set up the window properties
         self.title("Library Database")
         # Set the window size to 800x600
@@ -17,7 +16,7 @@ class LibraryGUI(tk.Tk):
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
-        self.library_db.sort_database_title(self.book_listbox, "ASC")
+        self.library_db.sort_database_int("book_id", self.book_listbox, "ASC")
 
     def create_menu(self):
         # Create the menu bar

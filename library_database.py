@@ -2,7 +2,6 @@ import sqlite3, csv
 from book_class import Book
 import tkinter as tk
 from tkinter import messagebox, filedialog
-from book_data import books_data
 
 
 class LibraryDatabase:
@@ -31,13 +30,19 @@ class LibraryDatabase:
         # Commit the changes to the database
         self.conn.commit()  
 
-    def populate_books(self, column, book_listbox):
+    def populate_books(self, columns, book_listbox):
         # Clear the book_listbox before inserting results
         book_listbox.delete(0, tk.END)
 
         # Display books
-        for columns in column:
-                book_listbox.insert(tk.END, columns)
+        for column in columns:
+            # Format the book information
+            book_info = f"ID: {column[0]} | Title: {column[1]} | Author: {column[2]} | Publication Date: {column[3]}"
+
+            # Insert the formatted book information into the book_listbox
+            book_listbox.insert(tk.END, book_info)
+            book_listbox.insert(tk.END, "")
+
 
     def add_book(self, title, author, pub_date, popup_window, book_listbox):
         # Validate the input
@@ -99,34 +104,37 @@ class LibraryDatabase:
 
 
     def sort_database_title(self, book_listbox, order):
-        # Execute the SQL query to select the book titles from the books table
-        self.cursor.execute("SELECT title FROM books")
+        # Execute the SQL query to select all columns from the books table
+        self.cursor.execute("SELECT * FROM books")
         rows = self.cursor.fetchall()
 
         if rows:
             # Extract the book titles from the result rows
-            book_titles = [row[0] for row in rows]
+            book_info = [f"ID: {row[0]}, Title: {row[1]}, Author: {row[2]}, Publication Date: {row[3]}" for row in rows]
 
             # Define a custom sorting key function
-            def sort_key(title):
+            def sort_key(info):
+                # Extract the title from the book information
+                title = info.split(",")[1].strip().split(":")[1].strip()
                 # Split the title into words
                 words = title.split()
                 # Ignore certain words at the beginning
                 if len(words) > 1 and words[0].lower() in ["the", "a", "an"]:
                     # Sort based on the second word
-                    return words[1]  
+                    return words[1]
                 else:
                     # Sort as is
-                    return title  
+                    return title
 
             if order == "ASC":
-                # Sort the book titles using the custom sorting key function
-                sorted_titles = sorted(book_titles, key=sort_key)
+                # Sort the book information using the custom sorting key function
+                sorted_info = sorted(book_info, key=sort_key)
             else:
-                # Sort the book using custom sorting key and in descending order
-                sorted_titles = sorted(book_titles, key=sort_key, reverse=True)
+                # Sort the book information using custom sorting key and in descending order
+                sorted_info = sorted(book_info, key=sort_key, reverse=True)
 
-            self.populate_books(sorted_titles, book_listbox)
+            self.populate_books(sorted_info, book_listbox)
+
 
     def sort_database_author(self, book_listbox, order):
         self.cursor.execute(f"SELECT * FROM books ORDER BY author {order}")
@@ -176,7 +184,7 @@ class LibraryDatabase:
     def close_connection(self):
         self.conn.close()  # Close the database connection
 
-
+"""
     def fill_db(self):
         for book_data in books_data:
             book = Book(book_data["book_id"], book_data["title"], book_data["author"], book_data["pub_date"])
@@ -191,3 +199,4 @@ class LibraryDatabase:
         self.conn.commit()
 
         print(f"Book added to the database: {book.title} by {book.author} ({book.pub_date})")
+"""
