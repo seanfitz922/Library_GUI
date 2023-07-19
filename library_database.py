@@ -193,6 +193,18 @@ class LibraryDatabase:
     def close_connection(self):
         self.conn.close()  # Close the database connection
 
+    def search_books(self, search_query):
+        # Execute the SQL query to search for books matching the query
+        self.cursor.execute(
+            "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR book_id LIKE ? OR pub_date LIKE ?",
+            ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%')
+        )
+        rows = self.cursor.fetchall()
+
+        # Return the search results
+        return rows
+
+
 """
     def fill_db(self):
         for book_data in books_data:

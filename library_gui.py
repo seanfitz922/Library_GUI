@@ -64,15 +64,15 @@ class LibraryGUI(tk.Tk):
 
         menubar.add_cascade(label="Sort", menu=sort_menu)
 
-        # Create the frame for the search bar
-        search_frame = tk.Frame(self)
-        search_frame.grid(row=0, column=0, sticky="e", padx=10, pady=10)
-
         # submenu for exporting (csv)
         export_menu = tk.Menu(menubar, tearoff=0)
         export_menu.add_command(label="CSV", command=self.library_db.export_database_csv)
 
         menubar.add_cascade(label="Export", menu=export_menu)
+
+         # Create the frame for the search bar
+        search_frame = tk.Frame(self)
+        search_frame.grid(row=0, column=0, sticky="e", padx=10, pady=10)
 
         # Create the Search bar
         self.search_var = tk.StringVar()
@@ -144,8 +144,21 @@ class LibraryGUI(tk.Tk):
         # Retrieve the search query from the search bar
         search_query = self.search_var.get()
 
+        # Clear the book_listbox before performing the search
+        self.book_listbox.delete(0, tk.END)
+
         # Perform the search operation based on the query
-        # ...
+        results = self.library_db.search_books(search_query)
+        if results:
+            # Display the search results in the book_listbox
+
+            for book in results:
+                book_info = f"ID: {book[0]} | Title: {book[1]} | Author: {book[2]} | Publication Date: {book[3]}"
+                self.book_listbox.insert(tk.END, book_info)
+        else:
+            messagebox.showinfo("No Results", "No books matching the search query found.")
+
+
 
 # Create an instance of the LibraryGUI class and run the GUI
 library_gui = LibraryGUI()
