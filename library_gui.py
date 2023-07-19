@@ -16,6 +16,7 @@ class LibraryGUI(tk.Tk):
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
+        # database is sorted by book_id everytime program is opened
         self.library_db.sort_database_int("book_id", self.book_listbox, "ASC")
 
     def create_menu(self):
@@ -94,9 +95,87 @@ class LibraryGUI(tk.Tk):
         self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
         self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
 
+        # Bind the double-click event to show_book_details function
+        self.book_listbox.bind("<Double-Button-1>", self.show_book_details)
+
 
     def save_file(self):
         pass
+
+    def show_book_details(self, event):
+        # Get the selected book index from the book_listbox
+        selected_index = self.book_listbox.curselection()
+
+        if selected_index:
+            # Get the selected book from the book_listbox
+            selected_book = self.book_listbox.get(selected_index)
+
+            # Split the book information into separate fields (ID, Title, Author, Publication Date)
+            book_id, title, author, pub_date = selected_book.split("|")
+
+            # Create a larger pop-up window
+            details_popup = tk.Toplevel(self)
+            details_popup.title("Book Details")
+
+            # Set the size of the pop-up window
+            details_popup.geometry("400x300")  # Adjust the width and height as needed
+
+            # Create labels
+            label_font = ("Arial", 12)  # Adjust the font family and size as needed
+            id_label = tk.Label(details_popup, text="Book ID:", font=label_font)
+            title_label = tk.Label(details_popup, text="Title:", font=label_font)
+            author_label = tk.Label(details_popup, text="Author:", font=label_font)
+            pub_date_label = tk.Label(details_popup, text="Publication Date:", font=label_font)
+
+            # Create entry fields
+            entry_font = ("Arial", 10)  # Adjust the font family and size as needed
+            id_entry = tk.Entry(details_popup, width=30, font=entry_font)  # Adjust the width as needed
+            title_entry = tk.Entry(details_popup, width=30, font=entry_font)  # Adjust the width as needed
+            author_entry = tk.Entry(details_popup, width=30, font=entry_font)  # Adjust the width as needed
+            pub_date_entry = tk.Entry(details_popup, width=30, font=entry_font)  # Adjust the width as needed
+
+            # Set the initial values of the entry fields
+            id_entry.insert(0, book_id.strip())
+            title_entry.insert(0, title.strip())
+            author_entry.insert(0, author.strip())
+            pub_date_entry.insert(0, pub_date.strip())
+
+            # Arrange the labels and entry fields using grid()
+            id_label.grid(row=0, column=0, padx=10, pady=10)
+            id_entry.grid(row=0, column=1, padx=10, pady=10)
+            title_label.grid(row=1, column=0, padx=10, pady=10)
+            title_entry.grid(row=1, column=1, padx=10, pady=10)
+            author_label.grid(row=2, column=0, padx=10, pady=10)
+            author_entry.grid(row=2, column=1, padx=10, pady=10)
+            pub_date_label.grid(row=3, column=0, padx=10, pady=10)
+            pub_date_entry.grid(row=3, column=1, padx=10, pady=10)
+
+            # Function to handle the Edit button click
+            def edit_book_details():
+                # Get the updated values from the entry fields
+                updated_book_id = id_entry.get()
+                updated_book_title = title_entry.get()
+                updated_pub_date = pub_date_entry.get()
+                updated_author = author_entry.get()
+
+                # Update the book information in the book_listbox
+                updated_book_info = f"{updated_book_id.strip()} | {updated_book_title.strip()} | {updated_author.strip()} | {updated_pub_date.strip()}"
+                self.book_listbox.delete(selected_index)
+                self.book_listbox.insert(selected_index, updated_book_info)
+
+                # Update the book information in the database
+                # Add your code to update the book information in the database here
+
+                # Destroy the pop-up window after editing
+                details_popup.destroy()
+
+            # Create an Edit button
+            submit_button = tk.Button(details_popup, text="Submit Changes", command=edit_book_details)
+
+            # Arrange the Edit button using grid()
+            submit_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+
+
 
     def prompt_add_book(self):
         # Create a new popup window
