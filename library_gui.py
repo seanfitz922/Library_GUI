@@ -113,6 +113,12 @@ class LibraryGUI(tk.Tk):
             # Split the book information into separate fields (ID, Title, Author, Publication Date)
             book_id, title, author, pub_date = selected_book.split("|")
 
+            # Extract only the values from the book information
+            book_id = book_id.split(":")[1].strip()
+            title = title.split(":")[1].strip()
+            author = author.split(":")[1].strip()
+            pub_date = pub_date.split(":")[1].strip()
+
             # Create a larger pop-up window
             details_popup = tk.Toplevel(self)
             details_popup.title("Book Details")
@@ -159,16 +165,19 @@ class LibraryGUI(tk.Tk):
                 updated_author = author_entry.get()
 
                 # Update the book information in the book_listbox
-                updated_book_info = f"{updated_book_id.strip()} | {updated_book_title.strip()} | {updated_author.strip()} | {updated_pub_date.strip()}"
+                updated_book_info = f"ID: {updated_book_id.strip()} | Title: {updated_book_title.strip()} | Author: {updated_author.strip()} | Publication Date: {updated_pub_date.strip()}"
                 self.book_listbox.delete(selected_index)
                 self.book_listbox.insert(selected_index, updated_book_info)
 
                 # Update the book information in the database
-                # Add your code to update the book information in the database here
+                self.library_db.cursor.execute(
+                    "UPDATE books SET title=?, author=?, pub_date=? WHERE book_id=?",
+                    (updated_book_title, updated_author, updated_pub_date, updated_book_id)
+                )
+                self.library_db.conn.commit()
 
                 # Destroy the pop-up window after editing
                 details_popup.destroy()
-
             # Create an Edit button
             submit_button = tk.Button(details_popup, text="Submit Changes", command=edit_book_details)
 
