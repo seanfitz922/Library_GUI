@@ -291,6 +291,7 @@ class LibraryGUI(tk.Tk):
             for book in results:
                 book_info = f"ID: {book[0]} | Title: {book[1]} | Author: {book[2]} | Publication Date: {book[3]}"
                 self.book_listbox.insert(tk.END, book_info)
+                self.book_listbox.insert(tk.END, "")
         else:
             messagebox.showinfo("No Results", "No books matching the search query found.")
 
