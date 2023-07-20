@@ -192,19 +192,21 @@ class LibraryGUI(tk.Tk):
             updated_pub_date = pub_date_entry.get()
             updated_author = author_entry.get()
 
-            # Check if the updated book ID is an integer
-            try:
-                updated_book_id = int(updated_book_id)
-            except ValueError:
-                messagebox.showerror("Invalid Book ID", "Book ID must be an integer.")
-                return
+            # Check if the updated book ID is changed
+            if updated_book_id != book_id:
+                # Check if the updated book ID is an integer
+                try:
+                    updated_book_id = int(updated_book_id)
+                except ValueError:
+                    messagebox.showerror("Invalid Book ID", "Book ID must be an integer.")
+                    return
 
-            # Check if the updated book ID is already in use
-            self.library_db.cursor.execute("SELECT book_id FROM books WHERE book_id=?", (updated_book_id,))
-            existing_book = self.library_db.cursor.fetchone()
-            if existing_book:
-                messagebox.showerror("Duplicate Book ID", "Book ID is already in use. Please choose a different ID.")
-                return
+                # Check if the updated book ID is already in use
+                self.library_db.cursor.execute("SELECT book_id FROM books WHERE book_id=?", (updated_book_id,))
+                existing_book = self.library_db.cursor.fetchone()
+                if existing_book:
+                    messagebox.showerror("Duplicate Book ID", "Book ID is already in use. Please choose a different ID.")
+                    return
 
             # Update the book information in the book_listbox
             updated_book_info = f"ID: {updated_book_id} | Title: {updated_book_title.strip()} | Author: {updated_author.strip()} | Publication Date: {updated_pub_date.strip()}"
@@ -221,10 +223,16 @@ class LibraryGUI(tk.Tk):
             # Destroy the pop-up window after editing
             details_popup.destroy()
 
+            # When the pop-up is closed, release the grab
+            details_popup.grab_release()
 
         # Create a Submit Changes button
         submit_button = tk.Button(details_popup, text="Submit Changes", command=submit_changes)
         submit_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+
+        # Add these lines to make the popup appear in front and wait until closed
+        details_popup.grab_set()
+        details_popup.wait_window()
 
     def prompt_add_book(self):
         # Create a new popup window
