@@ -50,6 +50,15 @@ class LibraryDatabase:
         if not title or not author or not pub_date:
             messagebox.showwarning("Invalid Input", "Please provide all book details.")
             return
+        
+        # Check if pub_date is a valid four-digit number
+        try:
+            if len(str(int(pub_date))) != 4:
+                raise ValueError("Publication date must be a valid four-digit number.")
+            
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Publication date must be a valid four-digit number.")
+            return     
 
         # Get the current maximum book_id from the database
         max_book_id = self.get_max_book_id()
@@ -64,7 +73,7 @@ class LibraryDatabase:
         ''', (book_id, title, author, pub_date))
         self.conn.commit()
 
-        book_listbox.insert(tk.END, f"{book_id}: {title} by {author} ({pub_date})")
+        book_listbox.insert(tk.END, f"ID: {book_id} | Title: {title} | Author: {author} | Publication Date: {pub_date}")
         messagebox.showinfo("Success", "Book added successfully.")
         
         popup_window.destroy()

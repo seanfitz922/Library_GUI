@@ -95,12 +95,33 @@ class LibraryGUI(tk.Tk):
         self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
         self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
 
+       # Create a context menu
+        self.context_menu = tk.Menu(self.book_listbox, tearoff=0)
+        self.context_menu.add_command(label="Edit", command=self.edit_book)
+        self.context_menu.add_command(label="Remove", command=self.prompt_remove_book)
+
         # Bind the double-click event to show_book_details function
         self.book_listbox.bind("<Double-Button-1>", self.show_book_details)
 
+        # Bind the left,right-click event to show the context menu
+        self.book_listbox.bind("<Button-1>", self.on_book_click)
+        self.book_listbox.bind("<Button-3>", self.show_context_menu)
+
+    def on_book_click(self, event):
+        # Get the selected book index from the event
+        self.selected_book_index = self.book_listbox.nearest(event.y)
 
     def save_file(self):
         pass
+
+    def edit_book(self):
+        pass
+
+    def show_context_menu(self, event):
+        # Only display the context menu if a book is selected
+        if self.selected_book_index is not None:
+            # Display the context menu at the right-click location
+            self.context_menu.post(event.x_root, event.y_root)
 
     def show_book_details(self, event):
         # Get the selected book index from the book_listbox
@@ -184,8 +205,6 @@ class LibraryGUI(tk.Tk):
             # Arrange the Edit button using grid()
             submit_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
-
-
     def prompt_add_book(self):
         # Create a new popup window
         popup_window = tk.Toplevel(self)
@@ -212,7 +231,7 @@ class LibraryGUI(tk.Tk):
             title_entry.get(), author_entry.get(), pub_date_entry.get(), popup_window, self.book_listbox))
         add_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
-    def prompt_remove_book(self):
+    def prompt_remove_book(self, event=None):
         popup_window = tk.Toplevel(self)
         popup_window.title("Remove Book")
 
