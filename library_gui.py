@@ -25,8 +25,8 @@ class LibraryGUI(tk.Tk):
 
         # Create the File menu
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Open", command=self.library_db.open_file)
-        file_menu.add_command(label="Save", command=self.save_file)
+        file_menu.add_command(label="Open", command=lambda: self.library_db.open_file(self.book_listbox))
+        file_menu.add_command(label="Save", command=self.library_db.save_file)
         file_menu.add_command(label="Close", command=self.library_db.close_file)
         menubar.add_cascade(label="File", menu=file_menu)
 

@@ -1,6 +1,6 @@
-import sqlite3, csv
-from book_class import Book
+import sqlite3, csv, os
 import tkinter as tk
+from book_class import Book
 from tkinter import messagebox, filedialog
 
 
@@ -161,11 +161,64 @@ class LibraryDatabase:
         # Close the current window
         self.parent.destroy()
 
-    def open_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+    def open_file(self, book_listbox):
+        file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
         if file_path:
             self.current_file = file_path
-            self.update_title()
+
+            # Clear the current database
+            self.cursor.execute("DELETE FROM books")
+            self.conn.commit()
+
+            # Read the CSV file and populate the database
+            with open(file_path, newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    book_id_str = row['Book ID']
+                    title = row['Title']
+                    author = row['Author']
+                    pub_date_str = row['Publication Date']
+
+                    try:
+                        # Convert book_id and pub_date to integers
+                        book_id = int(book_id_str) if book_id_str else None
+                        pub_date = int(pub_date_str) if pub_date_str else None
+                    except ValueError:
+                        # If the conversion fails, skip this row and continue with the next one
+                        continue
+
+                    self.cursor.execute('''
+                        INSERT INTO books (book_id, title, author, pub_date)
+                        VALUES (?, ?, ?, ?)
+                    ''', (book_id, title, author, pub_date))
+            self.conn.commit()
+            # Fetch all rows from the database
+            self.cursor.execute("SELECT * FROM books")
+            rows = self.cursor.fetchall()
+
+            # Update the book_listbox with the new data
+            self.populate_books(rows, book_listbox)
+
+    def save_file(self):
+        if self.current_file:
+            # Export the current database to a temporary CSV file
+            temp_file = "temp_library_database.csv"
+            with open(temp_file, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
+
+                self.cursor.execute("SELECT * FROM books")
+                rows = self.cursor.fetchall()
+
+                for row in rows:
+                    writer.writerow(row)
+
+            # Replace the original CSV file with the temporary file
+            os.replace(temp_file, self.current_file)
+
+            messagebox.showinfo("Success", "Changes saved successfully.")
+        else:
+            messagebox.showwarning("Save Failed", "No file is currently open. Please open a CSV file before saving changes.")
 
     def export_database_csv(self):
         # Open file browser dialog to select the save location
@@ -192,14 +245,8 @@ class LibraryDatabase:
                 messagebox.showwarning("Export Failed", "No books found in the database.")
         else:
             messagebox.showwarning("Export Cancelled", "No file selected.")
-
-    def update_title(self):
-        if self.current_file:
-            self.file_label.config(text="Current File: " + self.current_file)
-            self.title("Library Database - " + self.current_file)
-        else:
-            self.file_label.config(text="Current File: ")
-            self.title("Library Database")
+    
+    
 
     def close_connection(self):
         self.conn.close()  # Close the database connection
