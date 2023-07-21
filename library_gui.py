@@ -12,7 +12,6 @@ class LibraryGUI(tk.Tk):
         self.geometry("800x600")  
         # Initialize the library database
         self.library_db = LibraryDatabase(self)
-        # Define a variable to store the current file name
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()

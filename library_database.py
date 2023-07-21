@@ -261,21 +261,3 @@ class LibraryDatabase:
 
         # Return the search results
         return rows
-
-
-"""
-    def fill_db(self):
-        for book_data in books_data:
-            book = Book(book_data["book_id"], book_data["title"], book_data["author"], book_data["pub_date"])
-            self.add_books_db(book)
-
-
-    def add_books_db(self, book):
-        self.cursor.execute('''
-            INSERT INTO books (book_id, title, author, pub_date)
-            VALUES (?, ?, ?, ?)
-        ''', (book.book_id, book.title, book.author, book.pub_date))
-        self.conn.commit()
-
-        print(f"Book added to the database: {book.title} by {book.author} ({book.pub_date})")
-"""
