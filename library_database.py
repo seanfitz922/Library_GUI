@@ -53,11 +53,11 @@ class LibraryDatabase:
         
         # Check if pub_date is a valid four-digit number
         try:
-            if len(str(int(pub_date))) != 4:
-                raise ValueError("Publication date must be a valid four-digit number.")
+            if len(str(int(pub_date))) > 4:
+                raise ValueError("Publication date must be a valid number.")
             
         except ValueError:
-            messagebox.showerror("Invalid Input", "Publication date must be a valid four-digit number.")
+            messagebox.showerror("Invalid Input", "Publication date must be a valid number.")
             return     
 
         # Get the current maximum book_id from the database

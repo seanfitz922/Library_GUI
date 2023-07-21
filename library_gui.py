@@ -16,8 +16,10 @@ class LibraryGUI(tk.Tk):
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
-        # database is sorted by book_id everytime program is opened
-        self.library_db.sort_database_int("book_id", self.book_listbox, "ASC")
+        # prompt user to open a csv file 
+        self.library_db.open_file(self.book_listbox)
+
+        #self.library_db.sort_database_int("book_id", self.book_listbox, "ASC")
 
     def create_menu(self):
         # Create the menu bar
@@ -194,11 +196,11 @@ class LibraryGUI(tk.Tk):
 
             # Check if pub_date is a valid four-digit number
             try:
-                if len(str(int(updated_pub_date))) != 4:
-                    raise ValueError("Publication date must be a valid four-digit number.")
+                if len(str(int(updated_pub_date))) > 4:
+                    raise ValueError("Publication date must be a valid number.")
                 
             except ValueError:
-                messagebox.showerror("Invalid Input", "Publication date must be a valid four-digit number.")
+                messagebox.showerror("Invalid Input", "Publication date must be a valid number.")
                 return     
 
             # Check if the updated book ID is changed
