@@ -192,6 +192,15 @@ class LibraryGUI(tk.Tk):
             updated_pub_date = pub_date_entry.get()
             updated_author = author_entry.get()
 
+            # Check if pub_date is a valid four-digit number
+            try:
+                if len(str(int(updated_pub_date))) != 4:
+                    raise ValueError("Publication date must be a valid four-digit number.")
+                
+            except ValueError:
+                messagebox.showerror("Invalid Input", "Publication date must be a valid four-digit number.")
+                return     
+
             # Check if the updated book ID is changed
             if updated_book_id != book_id:
                 # Check if the updated book ID is an integer
@@ -207,6 +216,7 @@ class LibraryGUI(tk.Tk):
                 if existing_book:
                     messagebox.showerror("Duplicate Book ID", "Book ID is already in use. Please choose a different ID.")
                     return
+                
 
             # Update the book information in the book_listbox
             updated_book_info = f"ID: {updated_book_id} | Title: {updated_book_title.strip()} | Author: {updated_author.strip()} | Publication Date: {updated_pub_date.strip()}"
@@ -260,6 +270,9 @@ class LibraryGUI(tk.Tk):
             title_entry.get(), author_entry.get(), pub_date_entry.get(), popup_window, self.book_listbox))
         add_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
+        popup_window.grab_set()
+        popup_window.wait_window()
+
     def prompt_remove_book(self, event=None):
         popup_window = tk.Toplevel(self)
         popup_window.title("Remove Book")
@@ -275,6 +288,9 @@ class LibraryGUI(tk.Tk):
         remove_button = tk.Button(popup_window, text="Remove", command=lambda: self.library_db.remove_book(
             id_entry.get(), popup_window, self.book_listbox))
         remove_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+
+        popup_window.grab_set()
+        popup_window.wait_window()
 
     def search_books(self, event=None):
         # Retrieve the search query from the search bar

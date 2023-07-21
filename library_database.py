@@ -77,6 +77,7 @@ class LibraryDatabase:
         messagebox.showinfo("Success", "Book added successfully.")
         
         popup_window.destroy()
+        popup_window.grab_release()
 
     def get_max_book_id(self):
         self.cursor.execute("SELECT MAX(book_id) FROM books")
@@ -109,6 +110,7 @@ class LibraryDatabase:
         messagebox.showinfo("Success", "Book removed successfully.")
 
         popup_window.destroy()
+        popup_window.grab_release()
 
 
     def sort_database_title(self, book_listbox, order):
