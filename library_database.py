@@ -213,6 +213,7 @@ class LibraryDatabase:
 
                 except Exception as e:
                     # If an error occurs, try the next encoding in the list
+                    # *This throws several errors. Please ignore
                     print(str(e))
                     continue
 
