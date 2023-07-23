@@ -166,8 +166,6 @@ class LibraryDatabase:
             # Create a new CSV file with the specified example book as the first line
             with open(filepath, 'w', newline='', encoding='utf-8-sig') as file:
                 writer = csv.writer(file)
-                writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
-                writer.writerow([1, 'Book Title', 'Book Author', 1234])
 
             # Show a message indicating the successful creation of the new file
             messagebox.showinfo("New File Created", f"New file '{os.path.basename(filepath)}' created.")
@@ -215,6 +213,7 @@ class LibraryDatabase:
 
                 except Exception as e:
                     # If an error occurs, try the next encoding in the list
+                    print(str(e))
                     continue
 
         else:
@@ -235,7 +234,7 @@ class LibraryDatabase:
                     pub_date = row['Publication Date']
 
                     # Insert the data from the CSV file into the database
-                    self.cursor.execute("INSERT INTO books (id, title, author, publication_date) VALUES (?, ?, ?, ?)",
+                    self.cursor.execute("INSERT INTO books (book_id, title, author, pub_date) VALUES (?, ?, ?, ?)",
                                         (book_id, title, author, pub_date))
 
             # Commit the changes to the database
