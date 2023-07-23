@@ -84,7 +84,7 @@ class LibraryGUI(tk.Tk):
 
         # Configure the window to use the menu bar
         self.config(menu=menubar)
-
+    
     def create_startup_popup(self):
         # Create a new popup window
         startup_popup = tk.Toplevel(self)
@@ -104,12 +104,15 @@ class LibraryGUI(tk.Tk):
             # Call the open_file function of the library database
             self.library_db.open_file(self.book_listbox)
 
-        # Function to handle the "New File" button click
         def new_file():
-            # Close the startup popup window
-            startup_popup.destroy()
+            # Prompt the user for the new file name
+            new_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
+            if new_file_path:
+                self.library_db.create_new_file(self.book_listbox, new_file_path)
 
-            # Add your code here for handling the "New File" option
+                # Close the startup popup window
+                startup_popup.destroy()
+
 
         # Create buttons for "Open File" and "New File" and use grid layout
         open_file_button = tk.Button(startup_popup, text="Open File", command=open_file)

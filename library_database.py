@@ -161,43 +161,51 @@ class LibraryDatabase:
         # Close the current window
         self.parent.destroy()
 
-    def open_file(self, book_listbox):
-        file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+    def create_new_file(self, book_listbox, filepath):
+        if filepath:
+            # Create a new CSV file with the specified example book as the first line
+            with open(filepath, 'w', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
+                writer.writerow([1, 'Book Title', 'Book Author', 1234])
+
+            # Show a message indicating the successful creation of the new file
+            messagebox.showinfo("New File Created", f"New file '{os.path.basename(filepath)}' created.")
+
+            # Update the current_file attribute to the newly created file
+            self.current_file = filepath
+            # Open the newly created file
+            self.open_file(book_listbox, filepath)
+
+    def open_file(self, book_listbox, file_path=None):
+        # If file_path is provided, use it; otherwise, open file browser dialog to select the file to open
+        if not file_path:
+            file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+
         if file_path:
-            self.current_file = file_path
+            # Clear the book_listbox before inserting results
+            book_listbox.delete(0, tk.END)
 
-            # Clear the current database
-            self.cursor.execute("DELETE FROM books")
-            self.conn.commit()
+            try:
+                # Open the CSV file using utf-8-sig encoding to handle BOM (Byte Order Mark)
+                with open(file_path, newline='', encoding='utf-8-sig') as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        book_id = row['Book ID']
+                        title = row['Title']
+                        author = row['Author']
+                        pub_date = row['Publication Date']
+                        book_info = f"ID: {book_id} | Title: {title} | Author: {author} | Publication Date: {pub_date}"
+                        book_listbox.insert(tk.END, book_info)
+                        book_listbox.insert(tk.END, "")
+                
+                # Update the current_file attribute to the newly opened file
+                self.current_file = file_path
+                # Update the title label to show the current file
+                # self.update_title()
 
-            # Read the CSV file and populate the database
-            with open(file_path, newline='') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    book_id_str = row['Book ID']
-                    title = row['Title']
-                    author = row['Author']
-                    pub_date_str = row['Publication Date']
-
-                    try:
-                        # Convert book_id and pub_date to integers
-                        book_id = int(book_id_str) if book_id_str else None
-                        pub_date = int(pub_date_str) if pub_date_str else None
-                    except ValueError:
-                        # If the conversion fails, skip this row and continue with the next one
-                        continue
-
-                    self.cursor.execute('''
-                        INSERT INTO books (book_id, title, author, pub_date)
-                        VALUES (?, ?, ?, ?)
-                    ''', (book_id, title, author, pub_date))
-            self.conn.commit()
-            # Fetch all rows from the database
-            self.cursor.execute("SELECT * FROM books")
-            rows = self.cursor.fetchall()
-
-            # Update the book_listbox with the new data
-            self.populate_books(rows, book_listbox)
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred while opening the file:\n{str(e)}")
 
     def save_file(self):
         if self.current_file:
