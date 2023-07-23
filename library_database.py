@@ -164,7 +164,7 @@ class LibraryDatabase:
     def create_new_file(self, book_listbox, filepath):
         if filepath:
             # Create a new CSV file with the specified example book as the first line
-            with open(filepath, 'w', newline='', encoding='utf-8') as file:
+            with open(filepath, 'w', newline='', encoding='utf-8-sig') as file:
                 writer = csv.writer(file)
                 writer.writerow(['Book ID', 'Title', 'Author', 'Publication Date'])
                 writer.writerow([1, 'Book Title', 'Book Author', 1234])
@@ -178,38 +178,77 @@ class LibraryDatabase:
             self.open_file(book_listbox, filepath)
 
     def open_file(self, book_listbox, file_path=None):
-        # If file_path is provided, use it; otherwise, open file browser dialog to select the file to open
         if not file_path:
+            # Open file browser dialog to select the file to open
             file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
 
         if file_path:
             # Clear the book_listbox before inserting results
             book_listbox.delete(0, tk.END)
 
-            try:
-                # Open the CSV file using utf-8-sig encoding to handle BOM (Byte Order Mark)
-                with open(file_path, newline='', encoding='utf-8-sig') as file:
-                    reader = csv.DictReader(file)
-                    for row in reader:
-                        book_id = row['Book ID']
-                        title = row['Title']
-                        author = row['Author']
-                        pub_date = row['Publication Date']
-                        book_info = f"ID: {book_id} | Title: {title} | Author: {author} | Publication Date: {pub_date}"
-                        book_listbox.insert(tk.END, book_info)
-                        book_listbox.insert(tk.END, "")
-                
-                # Update the current_file attribute to the newly opened file
-                self.current_file = file_path
-                # Update the title label to show the current file
-                # self.update_title()
+            encodings_to_try = ['utf-8', 'utf-16', 'latin-1']
 
-            except Exception as e:
-                messagebox.showerror("Error", f"An error occurred while opening the file:\n{str(e)}")
+            for encoding in encodings_to_try:
+                try:
+                    # Open the CSV file using the current encoding
+                    with open(file_path, newline='', encoding=encoding) as file:
+                        reader = csv.DictReader(file)
+                        for row in reader:
+                            book_id = row['Book ID']
+                            title = row['Title']
+                            author = row['Author']
+                            pub_date = row['Publication Date']
+                            book_info = f"ID: {book_id} | Title: {title} | Author: {author} | Publication Date: {pub_date}"
+                            book_listbox.insert(tk.END, book_info)
+                            book_listbox.insert(tk.END, "")
+
+                    # Update the current_file attribute to the newly opened file
+                    self.current_file = file_path
+                    # Update the title label to show the current file
+                    # self.update_title()
+
+                    # Now, update the database with the contents of the opened CSV file
+                    self.update_database_from_csv(file_path)
+
+                    # If the loop completes without errors, break out of the loop
+                    break
+
+                except Exception as e:
+                    # If an error occurs, try the next encoding in the list
+                    continue
+
+        else:
+            # If all encodings fail, show an error message
+            messagebox.showerror("Error", "Failed to open the file with any of the supported encodings.")
+    def update_database_from_csv(self, file_path):
+        # Clear the current database to load the data from the CSV file
+        self.cursor.execute("DELETE FROM books")
+
+        try:
+            # Open the CSV file using utf-8-sig encoding to handle BOM (Byte Order Mark)
+            with open(file_path, newline='', encoding='utf-8-sig') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    book_id = row['Book ID']
+                    title = row['Title']
+                    author = row['Author']
+                    pub_date = row['Publication Date']
+
+                    # Insert the data from the CSV file into the database
+                    self.cursor.execute("INSERT INTO books (id, title, author, publication_date) VALUES (?, ?, ?, ?)",
+                                        (book_id, title, author, pub_date))
+
+            # Commit the changes to the database
+            self.conn.commit()
+
+        except Exception as e:
+            # Rollback the changes in case of an error
+            self.conn.rollback()
+            raise e
 
     def save_file(self):
         if self.current_file:
-            # Export the current database to a temporary CSV file
+            # Export the selected books to a temporary CSV file
             temp_file = "temp_library_database.csv"
             with open(temp_file, 'w', newline='') as file:
                 writer = csv.writer(file)
@@ -227,6 +266,7 @@ class LibraryDatabase:
             messagebox.showinfo("Success", "Changes saved successfully.")
         else:
             messagebox.showwarning("Save Failed", "No file is currently open. Please open a CSV file before saving changes.")
+
 
     def export_database_csv(self):
         # Open file browser dialog to select the save location
@@ -254,8 +294,6 @@ class LibraryDatabase:
         else:
             messagebox.showwarning("Export Cancelled", "No file selected.")
     
-    
-
     def close_connection(self):
         self.conn.close()  # Close the database connection
 

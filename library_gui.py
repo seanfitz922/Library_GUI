@@ -113,7 +113,6 @@ class LibraryGUI(tk.Tk):
                 # Close the startup popup window
                 startup_popup.destroy()
 
-
         # Create buttons for "Open File" and "New File" and use grid layout
         open_file_button = tk.Button(startup_popup, text="Open File", command=open_file)
         open_file_button.grid(row=0, column=0, padx=5, pady=5)
@@ -344,8 +343,6 @@ class LibraryGUI(tk.Tk):
                 self.book_listbox.insert(tk.END, "")
         else:
             messagebox.showinfo("No Results", "No books matching the search query found.")
-
-
 
 # Create an instance of the LibraryGUI class and run the GUI
 library_gui = LibraryGUI()
