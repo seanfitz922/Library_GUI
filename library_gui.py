@@ -15,10 +15,8 @@ class LibraryGUI(tk.Tk):
         # Call methods to set up the GUI components
         self.create_menu()
         self.create_widgets()
-        # prompt user to open a csv file 
-        self.library_db.open_file(self.book_listbox)
-
-        #self.library_db.sort_database_int("book_id", self.book_listbox, "ASC")
+        # Create a popup window to choose between "Open File" and "New File"
+        self.create_startup_popup()
 
     def create_menu(self):
         # Create the menu bar
@@ -87,6 +85,44 @@ class LibraryGUI(tk.Tk):
         # Configure the window to use the menu bar
         self.config(menu=menubar)
 
+    def create_startup_popup(self):
+        # Create a new popup window
+        startup_popup = tk.Toplevel(self)
+        startup_popup.title("Select File")
+
+         # Disable the ability to resize the popup window
+        startup_popup.resizable(False, False)
+
+        # Set the size of the popup window
+        startup_popup.geometry("270x40")
+
+        # Function to handle the "Open File" button click
+        def open_file():
+            # Close the startup popup window
+            startup_popup.destroy()
+
+            # Call the open_file function of the library database
+            self.library_db.open_file(self.book_listbox)
+
+        # Function to handle the "New File" button click
+        def new_file():
+            # Close the startup popup window
+            startup_popup.destroy()
+
+            # Add your code here for handling the "New File" option
+
+        # Create buttons for "Open File" and "New File" and use grid layout
+        open_file_button = tk.Button(startup_popup, text="Open File", command=open_file)
+        open_file_button.grid(row=0, column=0, padx=5, pady=5)
+
+        new_file_button = tk.Button(startup_popup, text="New File", command=new_file)
+        new_file_button.grid(row=0, column=1, padx=5, pady=5)
+
+        # Make the startup popup window appear in front and wait until closed
+        startup_popup.lift(self)
+        startup_popup.grab_set()
+        startup_popup.wait_window()
+
     def create_widgets(self):
         # Label for the current file name
         self.file_label = tk.Label(self, text="Current File: ")
@@ -111,12 +147,6 @@ class LibraryGUI(tk.Tk):
     def on_book_click(self, event):
         # Get the selected book index from the event
         self.selected_book_index = self.book_listbox.nearest(event.y)
-
-    def save_file(self):
-        pass
-
-    def edit_book(self):
-        pass
 
     def show_context_menu(self, event):
         # Only display the context menu if a book is selected
