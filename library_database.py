@@ -202,12 +202,13 @@ class LibraryDatabase:
 
                     # Update the current_file attribute to the newly opened file
                     self.current_file = file_path
+                    print(str(file_path))
                     # Update the title label to show the current file
                     # self.update_title()
 
                     # Now, update the database with the contents of the opened CSV file
                     self.update_database_from_csv(file_path)
-
+                    print(str(file_path))
                     # If the loop completes without errors, break out of the loop
                     break
 
@@ -220,13 +221,14 @@ class LibraryDatabase:
         else:
             # If all encodings fail, show an error message
             messagebox.showerror("Error", "Failed to open the file with any of the supported encodings.")
+
     def update_database_from_csv(self, file_path):
         # Clear the current database to load the data from the CSV file
         self.cursor.execute("DELETE FROM books")
 
         try:
             # Open the CSV file using utf-8-sig encoding to handle BOM (Byte Order Mark)
-            with open(file_path, newline='', encoding='utf-8-sig') as file:
+            with open(file_path, newline='', encoding='utf-8', errors='replace') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     book_id = row['Book ID']
@@ -242,9 +244,8 @@ class LibraryDatabase:
             self.conn.commit()
 
         except Exception as e:
-            # Rollback the changes in case of an error
-            self.conn.rollback()
-            raise e
+            print(str(e))
+            
 
     def save_file(self):
         if self.current_file:
@@ -267,7 +268,6 @@ class LibraryDatabase:
         else:
             messagebox.showwarning("Save Failed", "No file is currently open. Please open a CSV file before saving changes.")
 
-
     def export_database_csv(self):
         # Open file browser dialog to select the save location
         filepath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
@@ -280,7 +280,7 @@ class LibraryDatabase:
 
             if rows:
                 # Open the CSV file at the selected location in write mode
-                with open(filepath, 'w', newline='') as file:
+                with open(filepath, 'w', newline='', encoding='utf-8') as file:
                     # Create a CSV writer object
                     writer = csv.writer(file)
                     # Write the column headers to the CSV file
