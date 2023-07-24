@@ -1,6 +1,5 @@
 import sqlite3, csv, os
 import tkinter as tk
-from book_class import Book
 from tkinter import messagebox, filedialog
 
 
@@ -15,8 +14,7 @@ class LibraryDatabase:
         self.cursor = self.conn.cursor() 
         # Create the books table if it doesn't exist 
         self.create_books_table()  
-        
-        #self.fill_db()
+
 
     def create_books_table(self):
         # Create the books table with the specified columns
@@ -202,13 +200,9 @@ class LibraryDatabase:
 
                     # Update the current_file attribute to the newly opened file
                     self.current_file = file_path
-                    print(str(file_path))
-                    # Update the title label to show the current file
-                    # self.update_title()
 
                     # Now, update the database with the contents of the opened CSV file
                     self.update_database_from_csv(file_path)
-                    print(str(file_path))
                     # If the loop completes without errors, break out of the loop
                     break
 

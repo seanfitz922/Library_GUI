@@ -1,5 +1,4 @@
 import tkinter as tk 
-import os
 from tkinter import messagebox, filedialog
 from library_database import LibraryDatabase
 
@@ -126,15 +125,15 @@ class LibraryGUI(tk.Tk):
         startup_popup.wait_window()
 
     def create_widgets(self):
-        # Label for the current file name
-        self.file_label = tk.Label(self, text="Current File: ")
-        self.file_label.grid(row=0, column=0, sticky="w")
+        # FIX ME: Label for the current file name
+        #self.file_label = tk.Label(self, text="Current File: ")
+        #self.file_label.grid(row=0, column=0, sticky="w")
 
         # Create and configure GUI components (listbox, buttons, etc.)
         self.book_listbox = tk.Listbox(self, font=("Arial", 12), height=25, width=85)
         self.book_listbox.grid(row=1, column=0, padx=10, pady=10)
 
-       # Create a context menu
+        # Create a context menu
         self.context_menu = tk.Menu(self.book_listbox, tearoff=0)
         self.context_menu.add_command(label="Edit", command=self.edit_book_details)
         self.context_menu.add_command(label="Remove", command=self.prompt_remove_book)
