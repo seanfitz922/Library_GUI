@@ -7,8 +7,8 @@ Requirements: Python 3.9
 
 How to run:
 
-1.1 Double click on the Python executable called LibraryGUI. If it does not open, I recommend opening the
-        executable located in the 'build' folder, or just running the program in your chosen IDE.
+1.1 Double click on the Python executable called LibraryGUI. If it does not open, I recommend just running 
+        the program in your chosen IDE.
 
 1.2 Select 'Open File' to open a preexisting CSV file or 'New File' to name and create a new one. 
         I recommend to download and open the CSV file titled "Example" included in the repo to get a gist of how books will be displayed.
