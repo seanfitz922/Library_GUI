@@ -1,0 +1,147 @@
+Book ID,Title,Author,Publication Date
+1,1984,George Orwell,1949
+2,A Brief History of Time,Stephen Hawking,1988
+3,A Farewell to Arms,Ernest Hemingway,1929
+4,A Game of Thrones,George R.R. Martin,1996
+5,A Passage to India,E.M. Forster,1924
+6,A Tale of Two Cities,Charles Dickens,1859
+7,Alice's Adventures in Wonderland,Lewis Carroll,1865
+8,Animal Farm,George Orwell,1945
+9,Anna Karenina,Leo Tolstoy,1877
+10,Beloved,Toni Morrison,1987
+11,Brave New World,Aldous Huxley,1932
+12,Catch-22,Joseph Heller,1961
+13,Crime and Punishment,Fyodor Dostoevsky,1866
+14,David Copperfield,Charles Dickens,1850
+15,Don Quixote,Miguel de Cervantes,1605
+16,Dracula,Bram Stoker,1897
+17,Emma,Jane Austen,1815
+18,Fahrenheit 451,Ray Bradbury,1953
+19,Frankenstein,Mary Shelley,1818
+20,Gone with the Wind,Margaret Mitchell,1936
+21,Great Expectations,Charles Dickens,1861
+22,Gulliver's Travels,Jonathan Swift,1726
+23,Hamlet,William Shakespeare,1603
+24,Harry Potter and the Philosopher's Stone,J.K. Rowling,1997
+25,Heart of Darkness,Joseph Conrad,1899
+26,Jane Eyre,Charlotte Bront�,1847
+27,Les Mis�rables,Victor Hugo,1862
+28,Little Women,Louisa May Alcott,1868
+29,Lolita,Vladimir Nabokov,1955
+30,Lord of the Flies,William Golding,1954
+31,Moby-Dick,Herman Melville,1851
+32,Nineteen Eighty-Four,George Orwell,1949
+33,Of Mice and Men,John Steinbeck,1937
+34,Oliver Twist,Charles Dickens,1838
+35,One Hundred Years of Solitude,Gabriel Garc�a M�rquez,1967
+36,Pride and Prejudice,Jane Austen,1813
+37,Rebecca,Daphne du Maurier,1938
+38,Robinson Crusoe,Daniel Defoe,1719
+39,Sense and Sensibility,Jane Austen,1811
+40,Siddhartha,Hermann Hesse,1922
+41,Slaughterhouse-Five,Kurt Vonnegut,1969
+42,The Adventures of Huckleberry Finn,Mark Twain,1884
+43,The Alchemist,Paulo Coelho,1988
+44,The Catcher in the Rye,J.D. Salinger,1951
+45,The Chronicles of Narnia,C.S. Lewis,1950
+46,The Color Purple,Alice Walker,1982
+47,The Count of Monte Cristo,Alexandre Dumas,1844
+48,The Da Vinci Code,Dan Brown,2003
+49,The Divine Comedy,Dante Alighieri,1320
+50,The Fault in Our Stars,John Green,2012
+51,The Fellowship of the Ring,J.R.R. Tolkien,1954
+52,The Girl with the Dragon Tattoo,Stieg Larsson,2005
+53,The Giving Tree,Shel Silverstein,1964
+54,The Godfather,Mario Puzo,1969
+55,The Golden Compass,Philip Pullman,1995
+56,The Grapes of Wrath,John Steinbeck,1939
+57,The Great Gatsby,F. Scott Fitzgerald,1925
+58,The Hobbit,J.R.R. Tolkien,1937
+59,The Hunger Games,Suzanne Collins,2008
+60,The Iliad,Homer,8th century BC
+61,The Interpretation of Dreams,Sigmund Freud,1899
+62,The Jungle Book,Rudyard Kipling,1894
+63,The Kite Runner,Khaled Hosseini,2003
+64,The Little Prince,Antoine de Saint-Exup�ry,1943
+65,The Lord of the Rings,J.R.R. Tolkien,1954
+66,The Lovely Bones,Alice Sebold,2002
+67,The Metamorphosis,Franz Kafka,1915
+68,The Odyssey,Homer,8th century BC
+69,The Old Man and the Sea,Ernest Hemingway,1952
+70,The Picture of Dorian Gray,Oscar Wilde,1890
+71,The Pilgrim's Progress,John Bunyan,1678
+72,The Prince,Niccol� Machiavelli,1532
+73,The Scarlet Letter,Nathaniel Hawthorne,1850
+74,The Secret Garden,Frances Hodgson Burnett,1911
+75,The Shining,Stephen King,1977
+76,The Silmarillion,J.R.R. Tolkien,1977
+77,The Stranger,Albert Camus,1942
+78,The Sun Also Rises,Ernest Hemingway,1926
+79,The Three Musketeers,Alexandre Dumas,1844
+80,The Time Machine,H.G. Wells,1895
+81,The Trial,Franz Kafka,1925
+82,The Twelfth Night,William Shakespeare,1602
+83,The War of the Worlds,H.G. Wells,1898
+84,The Wind in the Willows,Kenneth Grahame,1908
+85,The Wonderful Wizard of Oz,L. Frank Baum,1900
+86,The Yellow Wallpaper,Charlotte Perkins Gilman,1892
+87,Things Fall Apart,Chinua Achebe,1958
+88,To Kill a Mockingbird,Harper Lee,1960
+89,Ulysses,James Joyce,1922
+90,War and Peace,Leo Tolstoy,1869
+91,Watership Down,Richard Adams,1972
+92,Wuthering Heights,Emily Bront�,1847
+93,2001: A Space Odyssey,Arthur C. Clarke,1968
+94,A Christmas Carol,Charles Dickens,1843
+95,A Clockwork Orange,Anthony Burgess,1962
+96,A Confederacy of Dunces,John Kennedy Toole,1980
+97,A Midsummer Night's Dream,William Shakespeare,1595
+98,A Prayer for Owen Meany,John Irving,1989
+99,A Room of One's Own,Virginia Woolf,1929
+100,A Streetcar Named Desire,Tennessee Williams,1947
+101,A Thousand Splendid Suns,Khaled Hosseini,2007
+102,A Wrinkle in Time,Madeleine L'Engle,1962
+103,All Quiet on the Western Front,Erich Maria Remarque,1929
+104,American Gods,Neil Gaiman,2001
+105,And Then There Were None,Agatha Christie,1939
+106,Anne of Green Gables,L.M. Montgomery,1908
+107,Atlas Shrugged,Ayn Rand,1957
+108,Brideshead Revisited,Evelyn Waugh,1945
+109,Charlotte's Web,E.B. White,1952
+110,Cloud Atlas,David Mitchell,2004
+111,Cold Mountain,Charles Frazier,1997
+112,Dune,Frank Herbert,1965
+113,East of Eden,John Steinbeck,1952
+114,Fight Club,Chuck Palahniuk,1996
+115,For Whom the Bell Tolls,Ernest Hemingway,1940
+116,Foundation,Isaac Asimov,1951
+117,Good Omens,Terry Pratchett and Neil Gaiman,1990
+118,Gravity's Rainbow,Thomas Pynchon,1973
+119,Harry Potter and the Prisoner of Azkaban,J.K. Rowling,1999
+120,His Dark Materials,Philip Pullman,1995
+121,I Know Why the Caged Bird Sings,Maya Angelou,1969
+122,Infinite Jest,David Foster Wallace,1996
+123,Invisible Man,Ralph Ellison,1952
+124,It,Stephen King,1986
+125,Jonathan Strange & Mr Norrell,Susanna Clarke,2004
+126,Jurassic Park,Michael Crichton,1990
+127,Leaves of Grass,Walt Whitman,1855
+128,Life of Pi,Yann Martel,2001
+129,Little House on the Prairie,Laura Ingalls Wilder,1935
+130,Love in the Time of Cholera,Gabriel Garc�a M�rquez,1985
+131,Macbeth,William Shakespeare,1623
+132,Middlemarch,George Eliot,1871
+133,Midnight's Children,Salman Rushdie,1981
+134,Mrs Dalloway,Virginia Woolf,1925
+135,Native Son,Richard Wright,1940
+136,Never Let Me Go,Kazuo Ishiguro,2005
+137,On the Road,Jack Kerouac,1957
+138,One Flew Over the Cuckoo's Nest,Ken Kesey,1962
+139,Paradise Lost,John Milton,1667
+140,Perfume: The Story of a Murderer,Patrick S�skind,1985
+141,Peter Pan,J.M. Barrie,1911
+142,Rebecca,Daphne du Maurier,1938
+143,Sense and Sensibility,Jane Austen,1811
+144,Slaughterhouse-Five,Kurt Vonnegut,1969
+145,The Bell Jar,Sylvia Plath,1963
+146,The Book Thief,Markus Zusak,2005

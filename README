@@ -10,7 +10,7 @@ How to run:
 1.1 Double click on the Python executable called LibraryGUI.
 
 1.2 Select 'Open File' to open a preexisting CSV file or 'New File' to name and create a new one. 
-      I recommend to open the CSV file titled "Example" to get a gist of how books will be displayed.
+      I recommend to download and open the CSV file titled "Example" included in the repo to get a gist of how books will be displayed.
 
 1.3  Utilize the menu bar on the top to add, remove, edit, or sort the books displayed. 
 
